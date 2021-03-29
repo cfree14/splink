@@ -1,4 +1,9 @@
 
+# Packages
+library(TMB)
+library(TMBhelper)
+library(tidyverse)
+
 # Get RAM data
 data <- splink::ram
 

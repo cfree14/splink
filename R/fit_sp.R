@@ -13,7 +13,8 @@ fit_sp <- function(data, p=1){
   nstocks <- length(stocks)
 
   # Load TMB code
-  tmbdir <- "/Users/cfree/Dropbox/Chris/Rutgers/projects/forage_fish/code/tmb_code"
+  tmbdir <- "inst/tmb"
+  # tmbdir <- "/Users/cfree/Dropbox/Chris/Rutgers/projects/forage_fish/code/tmb_code"
   dyn.load(TMB::dynlib(file.path(tmbdir, "pella")))
 
   # Starting values
