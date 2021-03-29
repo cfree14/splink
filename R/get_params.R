@@ -1,5 +1,10 @@
 
-# Extract parameters
+#' Fetches the parameter estimates and confidence intervals from a TMB model fit
+#'
+#' This function fetches the parameter estimates and confidence intervals from a TMB model fit.
+#'
+#' @param output Output from function fitting biomass dynamics model
+#' @return A data frame with the point estimates, standard error, and 95% confidence interval from model fit
 get_results <- function(output){
 
   # Stocks

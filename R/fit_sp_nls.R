@@ -1,5 +1,11 @@
 
-# Fit surplus production model
+#' Fit surplus production model using NLS estimation
+#'
+#' This function fits a surplus production model using NLS estimation.
+#'
+#' @param data A prepped data frame with the following required columns: stockid, year, biomass_scaled, sp_scaled
+#' @param p The shape parameter
+#' @return A data frame containing the point estimate fits for r and K
 fit_sp_nls <- function(data, p=1){
 
   # Parameters

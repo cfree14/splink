@@ -31,4 +31,6 @@ output <- splink::fit_sp(data = data_final, p=0.2)
 results <- splink::get_results(output)
 
 # Plot results
-plot_results(results)
+splink::plot_results(results)
+
+

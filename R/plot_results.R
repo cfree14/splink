@@ -1,5 +1,11 @@
 
-# Extract parameters
+#' Plot parameter estimates and confidence intervals
+#'
+#' This function plots point estimates and confidence intervals for parameters in a covariate-linked biomass dynamic model fit. The plot shows histograms of the point estimates and spline plots showing the point estimates and their 95% confidence intervals.
+#'
+#' @param results Results data frame
+#' @return Plot of parameter estimates and confidence intervals
+#' @export
 plot_results <- function(results){
 
   # Base theme
@@ -35,12 +41,13 @@ plot_results <- function(results){
     # Labels
     labs(x="Estimate", y="Stock") +
     # Theme
-    theme_bw() + base_theme +
-    theme(axis.text.y=element_blank())
+    theme_bw() + base_theme
   g2
 
   # Merge
   g <- gridExtra::grid.arrange(g1, g2, nrow=2, heights=c(0.3, 0.7))
   g
+
+  # Return(g)
 
 }

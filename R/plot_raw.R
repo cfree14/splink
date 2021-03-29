@@ -1,5 +1,11 @@
 
-
+#' Plot sample of prepped surplus production data
+#'
+#' This function plots a sample of prepped surplus production data.
+#'
+#' @param data Prepped data
+#' @param n Number of stocks to plot data for
+#' @return Plot of SP curves for N stocks
 plot_raw <- function(data, n=NULL){
 
   # Number of stocks to plot
