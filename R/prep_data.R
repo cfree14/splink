@@ -1,6 +1,11 @@
 
-
-data <- splink::ram
+#' Prepare data for fitting biomass dynamics models
+#'
+#' Prepare data.
+#'
+#' @param data Raw data
+#' @return Prepped data - filtered, scaled
+#' @export
 prep_data <- function(data){
 
   # Format data

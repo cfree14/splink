@@ -48,6 +48,7 @@ plot_results <- function(results){
   g <- gridExtra::grid.arrange(g1, g2, nrow=2, heights=c(0.3, 0.7))
   g
 
-  # Return(g)
+  # Return
+  return(g)
 
 }

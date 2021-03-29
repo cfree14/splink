@@ -6,6 +6,7 @@
 #' @param data A prepped data frame with the following required columns: stockid, year, biomass_scaled, sp_scaled
 #' @param p The shape parameter
 #' @return A data frame containing the point estimate fits for r and K
+#' @export
 fit_sp_nls <- function(data, p=1){
 
   # Parameters

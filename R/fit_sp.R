@@ -6,6 +6,7 @@
 #' @param data A prepped data frame with the following required columns: stockid, year, biomass_scaled, sp_scaled
 #' @param p The shape parameter
 #' @return A list containing: (1) the data; (2) the model fit; and (3) the standard error report.
+#' @export
 fit_sp <- function(data, p=1){
 
   # Parameters

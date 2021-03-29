@@ -5,6 +5,7 @@
 #'
 #' @param output Output from function fitting biomass dynamics model
 #' @return A data frame with the point estimates, standard error, and 95% confidence interval from model fit
+#' @export
 get_results <- function(output){
 
   # Stocks

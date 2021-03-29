@@ -6,6 +6,7 @@
 #' @param data Prepped data
 #' @param n Number of stocks to plot data for
 #' @return Plot of SP curves for N stocks
+#' @export
 plot_raw <- function(data, n=NULL){
 
   # Number of stocks to plot
