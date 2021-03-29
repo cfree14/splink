@@ -13,11 +13,6 @@ fit_sp <- function(data, p=1){
   stocks <- unique(data$stockid)
   nstocks <- length(stocks)
 
-  # Load TMB code
-  tmbdir <- "inst/tmb"
-  # tmbdir <- "/Users/cfree/Dropbox/Chris/Rutgers/projects/forage_fish/code/tmb_code"
-  dyn.load(TMB::dynlib(file.path(tmbdir, "pella")))
-
   # Starting values
   params <- list(ln_B0=rep(1.5, nstocks),
                  ln_r=rep(log(0.4), nstocks), # r=0.4 is pretty medium
@@ -31,6 +26,34 @@ fit_sp <- function(data, p=1){
                      B_t=data$biomass_scaled,
                      P_t=data$sp_scaled)
 
+  # Compile TMB model
+  #######################################
+
+  # TMB installed?
+  tmb_check <- require(TMB, quietly=TRUE)
+  if(tmb_check==FALSE){stop("Please install package `TMB` from CRAN.")}
+
+  # Directories
+  origdir <- getwd()
+  tmbdir <- system.file("tmb", package="splink")
+  rundir <- tempfile(pattern="run_", tmpdir=tempdir(), fileext="/")
+
+  # Compile TMB model
+  dir.create(rundir)
+  file.copy(from=file.path(tmbdir, "pella.cpp"), to=file.path(rundir, "pella.cpp"), overwrite=FALSE)
+  on.exit(setwd(origdir),add=TRUE)
+  setwd(rundir)
+  compile("pella.cpp")
+  dyn.load(TMB::dynlib(file.path(rundir, "pella")))
+
+  # Fit model
+  #######################################
+
+  # Load TMB code
+  # tmbdir <- "inst/tmb"
+  # # tmbdir <- "/Users/cfree/Dropbox/Chris/Rutgers/projects/forage_fish/code/tmb_code"
+  # dyn.load(TMB::dynlib(file.path(tmbdir, "pella")))
+
   # Initialize model
   model <- TMB::MakeADFun(data=input.data, parameters=params, DLL="pella")
 
@@ -41,10 +64,15 @@ fit_sp <- function(data, p=1){
   hess <- optimHess(par=fit$par, fn=model$fn, gr=model$gr)
   sd <- try(TMB::sdreport(model, hessian.fixed=hess))
 
+
+  # Export fit
+  #######################################
+
   # Package data
   output <- list(data=data, fit=fit, sd=sd)
 
   # Return
+  setwd(origdir)
   return(output)
 
 }
