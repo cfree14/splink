@@ -1,16 +1,19 @@
 Package: splink
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Covariate-linked biomass dynamic models
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: Chris Free
+Maintainer: Chris Free <cfree14@gmail.com>
+Description: Fit, compare, and plot covariate-linked biomass dynamic models.
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 2.10)
+    TMB
+    TMBhelper
+    tidyverse
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,
