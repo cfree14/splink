@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_results.R
 \name{get_results}
 \alias{get_results}
-\title{Fetches the parameter estimates and confidence intervals from a TMB model fit}
+\title{Extracts the parameter estimates and confidence intervals from a TMB model fit}
 \usage{
 get_results(output)
 }
@@ -13,5 +13,5 @@ get_results(output)
 A data frame with the point estimates, standard error, and 95% confidence interval from model fit
 }
 \description{
-This function fetches the parameter estimates and confidence intervals from a TMB model fit.
+This function extracts the parameter estimates and confidence intervals from a TMB model fit.
 }

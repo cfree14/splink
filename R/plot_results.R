@@ -18,14 +18,18 @@ plot_results <- function(results){
   results1 <- results %>%
     group_by(param) %>%
     arrange(param, desc(est)) %>%
-    mutate(order=1:n())
-    # # Cap hi estimates
-    # mutate(est_cap=recode(param, "B0"=10, "r"=3, "sigmaP"=1) %>% as.numeric(),
-    #        est_hi_cap=pmin(est_cap, est_hi))
+    mutate(order=1:n()) %>%
+    # Cap hi estimates
+    mutate(est_cap=recode(param, "B0"=10, "r"=3, "sigmaP"=1,
+                          "alpha"=15, "beta"=15, "sigmaR"=2, theta=10) %>% as.numeric(),
+           est_hi_cap=pmin(est_cap, est_hi))
+
+  # Number of parameters
+  nparams <- n_distinct(results1$param)
 
   # Histograms
   g1 <- ggplot(results1, aes(x=est)) +
-    facet_wrap(~param, scales="free") +
+    facet_wrap(~param, scales="free", ncol=nparams) +
     geom_histogram() +
     # Labels
     labs(x="Estimate", y="Number of stocks") +
@@ -35,8 +39,8 @@ plot_results <- function(results){
 
   # Spline plots
   g2 <- ggplot(results1, aes(y=order, x=est)) +
-    facet_wrap(~param, scales="free") +
-    geom_errorbar(data=results1, mapping=aes(y=order, xmin=est_lo, xmax=est_hi), inherit.aes = F, color="grey70") +
+    facet_wrap(~param, scales="free", ncol=nparams) +
+    geom_errorbar(data=results1, mapping=aes(y=order, xmin=est_lo, xmax=est_hi_cap), inherit.aes = F, color="grey70") +
     geom_point() +
     # Labels
     labs(x="Estimate", y="Stock") +

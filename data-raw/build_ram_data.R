@@ -17,9 +17,13 @@ datadir <- "approach2/data"
 # Read RAM Legacy Database v4.491 (with model fits)
 load("/Users/cfree/Dropbox/Chris/UCSB/data/ramldb/RAM v4.491 Files (1-14-20)/RAM v4.491/DB Files With Model Fit Data/R Data/DBdata[mdl][v4.491].RData")
 
+crazy <- "REYEROCKGA"
+perfect_srs <- c("BGROCKPCOAST", "GRSPROCKNCAL", "GRSPROCKSCAL", "LNOSESKAPCOAST", "SPSDOGPCOAST", "YEYEROCKPCOAST")
+se_fail <- c("PCOD5AB", "SARDPCOAST", "SABLEFPCOAST", "PCODHS") # no peak?
+
 # Read WC RAM data for example recruitment data
 ram_wc <-readRDS("/Users/cfree/Dropbox/Chris/UCSB/projects/wc_cc_synthesis/data/ramldb/processed/RAM_WC_recruitment_data_prepped.Rds") %>%
-  filter(stockid!="REYEROCKGA")
+  filter(!stockid %in% c(crazy, perfect_srs, se_fail))
 
 
 # Build data

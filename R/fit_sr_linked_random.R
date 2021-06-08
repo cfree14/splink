@@ -13,7 +13,7 @@
 #' splink::plot_results(results)
 #' splink::plot_fits_sr(output, plotdir="~/Desktop", plotname="test.pdf")
 #' @export
-fit_sr_linked <- function(data, b_col, r_col, cov_col, effect, type){
+fit_sr_linked_random <- function(data, b_col, r_col, cov_col, effect, type){
 
   # Perform checks
   if(!type %in% c("ricker", "bev-holt")){stop("The 'type' must be either 'ricker' or 'bev-holt'.")}
