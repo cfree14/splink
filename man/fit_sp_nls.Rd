@@ -4,7 +4,7 @@
 \alias{fit_sp_nls}
 \title{Fit surplus production model using NLS estimation}
 \usage{
-fit_sp_nls(data, p = 1)
+fit_sp_nls(data, b_col, sp_col, p = 1)
 }
 \arguments{
 \item{data}{A prepped data frame with the following required columns: stockid, year, biomass_scaled, sp_scaled}
@@ -16,4 +16,10 @@ A data frame containing the point estimate fits for r and K
 }
 \description{
 This function fits a surplus production model using NLS estimation.
+}
+\examples{
+data <- splink::ram_ne
+output <- fit_sp_nls(data=data, b_col="tb_scaled", sp_col="sp_scaled", p=0.4)
+output$fits
+splink::plot_fits_nls(output)
 }

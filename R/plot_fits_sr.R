@@ -1,14 +1,14 @@
 
-#' Plot surplus production model fits
+#' Plot stock recruit model fits
 #'
-#' This function plots surplus production model fits and exports to a PDF.
+#' This function plots stock recruit model fits and exports to a PDF.
 #'
-#' @param output SP model output
+#' @param output SR model output
 #' @param plotdir Path for plot export
 #' @param plotname Plot name (must end with ".pdf)
 #' @return PDF with production model fits
 #' @export
-plot_fits <- function(output, plotdir=getwd(), plotname="TMB_fits.pdf"){
+plot_fits_sr <- function(output, plotdir=getwd(), plotname="TMB_fits.pdf"){
 
   # Stocks do
   stocks_do <- sort(unique(output$data$stockid))
@@ -21,27 +21,34 @@ plot_fits <- function(output, plotdir=getwd(), plotname="TMB_fits.pdf"){
 
   # Params
   results <- splink::get_results(output)
-  spfits <- results %>%
+  srfits <- results %>%
     select(stockid, param, est) %>%
     spread(key="param", value="est")
 
+  # SR type
+  type <- output$type
+
   # Create lines
-  sp_lines <- purrr::map_df(1:nrow(spfits), function(x){
+  sr_lines <- purrr::map_df(1:nrow(srfits), function(x){
 
     # Parameters
-    stockid <- spfits$stockid[x]
-    r <- spfits$r[x]
-    k <- spfits$B0[x]
-    p <- 0.2
+    stockid <- srfits$stockid[x]
+    alpha <- srfits$alpha[x]
+    beta <- srfits$beta[x]
 
     # Simulate data
     b <- seq(0, 1, 0.01)
-    sp <- r/p * b * (1-(b/k)^p)
+    if(type=="ricker"){
+      recruits <- alpha * b * exp(-beta*b)
+    }
+    if(type=="bev-holt"){
+      recruits <- alpha * b / (beta + b)
+    }
 
     # Record production
     z <- data.frame(stockid=stockid,
-                    biomass_scaled=b,
-                    sp_scaled=sp)
+                    b_scaled=b,
+                    r_scaled=recruits)
 
   })
 
@@ -60,12 +67,12 @@ plot_fits <- function(output, plotdir=getwd(), plotname="TMB_fits.pdf"){
                      axis.line = element_line(colour = "black"))
 
   # Plot data
-  g <- ggplot(data_plot, aes(x=biomass_scaled, y=sp_scaled)) +
+  g <- ggplot(data_plot, aes(x=b_scaled, y=r_scaled)) +
     geom_point(pch=21, size=2, color="grey30") +
     # Line
-    geom_line(data=sp_lines, mapping=aes(x=biomass_scaled, y=sp_scaled), color="black", size=0.7) +
+    geom_line(data=sr_lines, mapping=aes(x=b_scaled, y=r_scaled), color="black", size=0.7) +
     # Labels
-    labs(x="Abundance (scaled)", y='Surplus production (scaled)') +
+    labs(x="Spawners (scaled)", y='Recruits (scaled)') +
     # Horizontal guide
     geom_hline(yintercept=0, linetype="dotted", color="black") +
     # Theme
@@ -82,6 +89,5 @@ plot_fits <- function(output, plotdir=getwd(), plotname="TMB_fits.pdf"){
     print(g + ggforce::facet_wrap_paginate(~stockid, scales="free_y", ncol = 4, nrow = 7, page=i))
   }
   dev.off()
-
 
 }

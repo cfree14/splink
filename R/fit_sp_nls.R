@@ -6,8 +6,16 @@
 #' @param data A prepped data frame with the following required columns: stockid, year, biomass_scaled, sp_scaled
 #' @param p The shape parameter
 #' @return A data frame containing the point estimate fits for r and K
+#' @examples
+#' data <- splink::ram_ne
+#' output <- fit_sp_nls(data=data, b_col="tb_scaled", sp_col="sp_scaled", p=0.4)
+#' output$fits
+#' splink::plot_fits_nls(output)
 #' @export
-fit_sp_nls <- function(data, p=1){
+fit_sp_nls <- function(data, b_col, sp_col, p=1){
+
+  # For testing
+  # data=ram_ne; b_col="tb_scaled"; sp_col="sp_scaled"; p=0.4
 
   # Parameters
   stocks <- unique(data$stockid)
@@ -22,8 +30,12 @@ fit_sp_nls <- function(data, p=1){
     return(spfit)
   }
 
+  # Format data
+  data_use <- data[,c("stockid", "year", b_col, sp_col)] %>%
+    setNames(c("stockid", "year", "biomass", "sp"))
+
   # Data frame to record SP fits
-  spfits <- data %>%
+  spfits <- data_use %>%
     group_by(stockid) %>%
     summarize(biomass_max=max(biomass)) %>%
     ungroup() %>%
@@ -34,24 +46,27 @@ fit_sp_nls <- function(data, p=1){
 
     # Subset data
     stock <- spfits$stockid[i]
-    sdata <- data %>%
+    sdata <- data_use %>%
       filter(stockid==stock)
     print(paste(i, stock))
 
     # Fit SP model
-    spfit <- fit_sp_nls(sp=sdata$sp_scaled, biomass=sdata$biomass_scaled, p=p)
+    spfit <- fit_sp_nls(sp=sdata$sp, biomass=sdata$biomass, p=p)
     if(!(inherits(spfit, "try-error"))){
       r <- exp(coef(spfit)["r"])
       k <- exp(coef(spfit)["k"])
       spfits$r[spfits$stockid==stock] <- r
       spfits$k[spfits$stockid==stock] <- k
-      # plot(sp_scaled ~ biomass_scaled, sdata)
-      # curve(r/p*x*(1-(x/k)^p), from=0, to=1, add=T, lty=1, lwd=0.9, col="red")
+      # plot(sp ~ biomass, sdata)
+      # curve(r/p*x*(1-(x/k)^p), from=0, to=max(sdata$biomass), add=T, lty=1, lwd=0.9, col="red")
     }
 
   }
 
+  # Package
+  output <- list(data=data, fits=spfits, b_col=b_col, sp_col=sp_col)
+
   # Return
-  return(spfits)
+  return(output)
 
 }

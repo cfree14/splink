@@ -17,6 +17,10 @@ datadir <- "approach2/data"
 # Read RAM Legacy Database v4.491 (with model fits)
 load("/Users/cfree/Dropbox/Chris/UCSB/data/ramldb/RAM v4.491 Files (1-14-20)/RAM v4.491/DB Files With Model Fit Data/R Data/DBdata[mdl][v4.491].RData")
 
+# Read WC RAM data for example recruitment data
+ram_wc <-readRDS("/Users/cfree/Dropbox/Chris/UCSB/projects/wc_cc_synthesis/data/ramldb/processed/RAM_WC_recruitment_data_prepped.Rds") %>%
+  filter(stockid!="REYEROCKGA")
+
 
 # Build data
 ################################################################################
@@ -44,12 +48,18 @@ ram <- timeseries_values_views %>%
   # Reduce to stock with biomass and catch in same units
   filter(biomass_units==catch_units)
 
+# RAM New England data
+ram_ne <- readRDS("/Users/cfree/Dropbox/Chris/UCSB/projects/ne_fishing_portfolio/data/ramldb/data/processed/RAM_NE_data_w_sst_trimmed_prepped.Rds") %>%
+  select(-c(source, catch_type))
+
 
 # Export data
 ################################################################################
 
 # Save data
 usethis::use_data(ram, overwrite = T)
+usethis::use_data(ram_ne, overwrite = T)
+usethis::use_data(ram_wc, overwrite = T)
 
 
 

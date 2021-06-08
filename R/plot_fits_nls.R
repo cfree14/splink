@@ -8,22 +8,21 @@
 #' @param plotname Plot name (must end with ".pdf)
 #' @return PDF with production model fits
 #' @export
-plot_fits <- function(output, plotdir=getwd(), plotname="TMB_fits.pdf"){
+plot_fits_nls <- function(output, plotdir=getwd(), plotname="NLS_SP_fits.pdf"){
 
   # Stocks do
   stocks_do <- sort(unique(output$data$stockid))
 
   # Data to plot
-  data_plot <- output$data
+  data_plot <- output$data[, c("stockid", "year", output$b_col, sp_col)] %>%
+    setNames(c("stockid", "year", "biomass", "sp"))
 
   # Build lines
   #############################
 
   # Params
-  results <- splink::get_results(output)
-  spfits <- results %>%
-    select(stockid, param, est) %>%
-    spread(key="param", value="est")
+  spfits <- output$fits %>%
+    filter(!is.na(r) & !is.na(k))
 
   # Create lines
   sp_lines <- purrr::map_df(1:nrow(spfits), function(x){
@@ -31,17 +30,18 @@ plot_fits <- function(output, plotdir=getwd(), plotname="TMB_fits.pdf"){
     # Parameters
     stockid <- spfits$stockid[x]
     r <- spfits$r[x]
-    k <- spfits$B0[x]
-    p <- 0.2
+    k <- spfits$k[x]
+    p <- spfits$p[x]
+    max_b <- spfits$biomass_max[x]
 
     # Simulate data
-    b <- seq(0, 1, 0.01)
+    b <- seq(0, max_b, length.out = 100)
     sp <- r/p * b * (1-(b/k)^p)
 
     # Record production
     z <- data.frame(stockid=stockid,
-                    biomass_scaled=b,
-                    sp_scaled=sp)
+                    biomass=b,
+                    sp=sp)
 
   })
 
@@ -60,18 +60,18 @@ plot_fits <- function(output, plotdir=getwd(), plotname="TMB_fits.pdf"){
                      axis.line = element_line(colour = "black"))
 
   # Plot data
-  g <- ggplot(data_plot, aes(x=biomass_scaled, y=sp_scaled)) +
+  g <- ggplot(data_plot, aes(x=biomass, y=sp)) +
     geom_point(pch=21, size=2, color="grey30") +
     # Line
-    geom_line(data=sp_lines, mapping=aes(x=biomass_scaled, y=sp_scaled), color="black", size=0.7) +
+    geom_line(data=sp_lines, mapping=aes(x=biomass, y=sp), color="black", size=0.7) +
     # Labels
-    labs(x="Abundance (scaled)", y='Surplus production (scaled)') +
+    labs(x="Biomass", y='Surplus production') +
     # Horizontal guide
     geom_hline(yintercept=0, linetype="dotted", color="black") +
     # Theme
     theme_bw() + my_theme +
     # Paginate
-    ggforce::facet_wrap_paginate(~stockid, scales="free_y", ncol = 4, nrow = 7, page=1)
+    ggforce::facet_wrap_paginate(~stockid, scales="free", ncol = 4, nrow = 7, page=1)
 
   # Number of pages
   npages <- ggforce::n_pages(g)

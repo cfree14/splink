@@ -2,18 +2,30 @@
 % Please edit documentation in R/plot_raw.R
 \name{plot_raw}
 \alias{plot_raw}
-\title{Plot sample of prepped surplus production data}
+\title{Plot surplus production data}
 \usage{
-plot_raw(data, n = NULL)
+plot_raw(data, b_col, sp_col, cov_col = NULL, n = NULL)
 }
 \arguments{
-\item{data}{Prepped data}
+\item{data}{Data}
 
-\item{n}{Number of stocks to plot data for}
+\item{b_col}{Name of column containing biomass time series}
+
+\item{sp_col}{Name of column containing surplus production time series}
+
+\item{cov_col}{Name of column containing covariate time series (optional)}
+
+\item{n}{Number of stocks to plot (defaults to 12 or fewer)}
 }
 \value{
-Plot of SP curves for N stocks
+A plot showing the biomass-production relationship for each stock
 }
 \description{
-This function plots a sample of prepped surplus production data.
+This function prepares a quick plot of the provided surplus production data. The dataframe must contain a column called "stockid" and a column called "year". There must also be a column containing biomass time series and a column containing surplus production time series. If a covariate is provided (optional), points will be colored based on the covariate.
+}
+\examples{
+data <- splink::ram_ne
+plot_raw(data, "tb_scaled", "sp_scaled")
+plot_raw(data, "tb_scaled", "sp_scaled", "sst_c_scaled")
+plot_raw(data, "tb_scaled", "sp_scaled", "sst_c_scaled", n=20)
 }

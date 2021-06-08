@@ -4,7 +4,7 @@
 \alias{fit_sp}
 \title{Fit surplus production model using maximum likelihood estimation}
 \usage{
-fit_sp(data, p = 1)
+fit_sp(data, b_col, sp_col, p = 1)
 }
 \arguments{
 \item{data}{A prepped data frame with the following required columns: stockid, year, biomass_scaled, sp_scaled}
@@ -16,4 +16,11 @@ A list containing: (1) the data; (2) the model fit; and (3) the standard error r
 }
 \description{
 This function fits a surplus production model using maximum likelihood estimation in TMB.
+}
+\examples{
+data <- splink::ram_ne
+output <- splink::fit_sp(data=data, b_col="tb_scaled", sp_col="sp_scaled", p=0.2)
+results <- splink::get_results(output)
+splink::plot_results(results)
+splink::plot_fits(output)
 }
