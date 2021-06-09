@@ -26,7 +26,8 @@ plot_thetas <- function(results){
       mutate(stockid=factor(stockid, levels=stockid)) %>%
       # Add sig
       mutate(est_inf=ifelse(est_hi<0, "negative",
-                            ifelse(est_lo>0, "positive", "none")))
+                            ifelse(est_lo>0, "positive", "none")),
+             est_inf=factor(est_inf, levels=c("negative", "none", "positive")))
   }else{
     data <- results$stock %>%
       # Reduce
@@ -38,7 +39,8 @@ plot_thetas <- function(results){
       mutate(stockid=factor(stockid, levels=stockid)) %>%
       # Add sig
       mutate(est_inf=ifelse(est_hi<0, "negative",
-                            ifelse(est_lo>0, "positive", "none")))
+                            ifelse(est_lo>0, "positive", "none")),
+             est_inf=factor(est_inf, levels=c("negative", "none", "positive")))
   }
 
   # Plot data
@@ -54,7 +56,7 @@ plot_thetas <- function(results){
     # Labels
     labs(x="Covariate effect", y="") +
     # Legend
-    scale_color_manual(name="Covariate effect", values=c("red", "black", "blue")) +
+    scale_color_manual(name="Covariate effect", values=c("red", "black", "blue"), drop=F) +
     guides(alpha=F) +
     # Theme
     theme_bw() +
