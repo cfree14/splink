@@ -8,24 +8,44 @@
 #' @export
 plot_results <- function(results){
 
+  # Format data
+  ####################################
+
+  # Type
+  type <- ifelse(length(results)==2, "random", "fixed")
+
+  #  Format results
+  if(type=="fixed"){
+    results1 <- results %>%
+      group_by(param) %>%
+      arrange(param, desc(est)) %>%
+      mutate(order=1:n()) %>%
+      # Cap hi estimates
+      mutate(est_cap=recode(param, "B0"=10, "r"=3, "sigmaP"=1,
+                            "alpha"=15, "beta"=15, "sigmaR"=2, theta=10) %>% as.numeric(),
+             est_hi_cap=pmin(est_cap, est_hi))
+  }else{
+    results1 <- results$stock %>%
+      group_by(param) %>%
+      arrange(param, desc(est)) %>%
+      mutate(order=1:n()) %>%
+      # Cap hi estimates
+      mutate(est_cap=recode(param, "B0"=10, "r"=3, "sigmaP"=1,
+                            "alpha"=15, "beta"=15, "sigmaR"=2, theta=10) %>% as.numeric(),
+             est_hi_cap=pmin(est_cap, est_hi))
+  }
+
+  # Number of parameters
+  nparams <- n_distinct(results1$param)
+
+  # Plot data
+  ####################################
+
   # Base theme
   base_theme <- theme(panel.grid.major = element_blank(),
                       panel.grid.minor = element_blank(),
                       panel.background = element_blank(),
                       axis.line = element_line(colour = "black"))
-
-  #  Format results
-  results1 <- results %>%
-    group_by(param) %>%
-    arrange(param, desc(est)) %>%
-    mutate(order=1:n()) %>%
-    # Cap hi estimates
-    mutate(est_cap=recode(param, "B0"=10, "r"=3, "sigmaP"=1,
-                          "alpha"=15, "beta"=15, "sigmaR"=2, theta=10) %>% as.numeric(),
-           est_hi_cap=pmin(est_cap, est_hi))
-
-  # Number of parameters
-  nparams <- n_distinct(results1$param)
 
   # Histograms
   g1 <- ggplot(results1, aes(x=est)) +

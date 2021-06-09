@@ -4,7 +4,13 @@
 \alias{plot_fits_sr}
 \title{Plot stock recruit model fits}
 \usage{
-plot_fits_sr(output, plotdir = getwd(), plotname = "TMB_fits.pdf")
+plot_fits_sr(
+  output,
+  b_col,
+  r_col,
+  plotdir = getwd(),
+  plotname = "TMB_fits.pdf"
+)
 }
 \arguments{
 \item{output}{SR model output}

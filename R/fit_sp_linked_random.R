@@ -15,7 +15,7 @@
 #' results <- splink::get_results(output)
 #' splink::plot_results(results)
 #' splink::plot_thetas(results)
-#' splink::plot_fits(output)
+#' splink::plot_fits_sp_linked(output, b_col="tb_scaled", sp_col="sp_scaled", cov_col="sst_c_scaled")
 #' @export
 fit_sp_linked_random <- function(data, b_col, sp_col, p=1, cov_col){
 

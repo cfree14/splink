@@ -14,7 +14,7 @@
 #' output <- splink::fit_sr(data=data, b_col="b_scaled", r_col="r_scaled", type="ricker")
 #' results <- splink::get_results(output)
 #' splink::plot_results(results)
-#' splink::plot_fits_sr(output, plotdir="~/Desktop", plotname="test.pdf")
+#' splink::plot_fits_sr(output, b_col="b_scaled", r_col="r_scaled", plotdir="~/Desktop", plotname="test.pdf")
 #' @export
 fit_sr <- function(data, b_col, r_col, type, cov_col=NULL, cov_effect=NULL){
 

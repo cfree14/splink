@@ -4,10 +4,26 @@
 \alias{plot_fits}
 \title{Plot surplus production model fits}
 \usage{
-plot_fits(output, plotdir = getwd(), plotname = "TMB_fits.pdf")
+plot_fits(
+  output,
+  b_col,
+  sp_col = NULL,
+  r_col = NULL,
+  cov_col = NULL,
+  plotdir = getwd(),
+  plotname = "TMB_fits.pdf"
+)
 }
 \arguments{
 \item{output}{SP model output}
+
+\item{b_col}{Biomass column}
+
+\item{sp_col}{Production column}
+
+\item{r_col}{Recruitment column}
+
+\item{cov_col}{Covariate column}
 
 \item{plotdir}{Path for plot export}
 

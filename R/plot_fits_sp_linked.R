@@ -8,7 +8,7 @@
 #' @param plotname Plot name (must end with ".pdf)
 #' @return PDF with production model fits
 #' @export
-plot_fits_sr_linked <- function(output, b_col, r_col, cov_col,
+plot_fits_sp_linked <- function(output, b_col, sp_col, cov_col,
                                 plotdir=getwd(), plotname="TMB_fits.pdf"){
 
   # Stocks do
@@ -17,19 +17,23 @@ plot_fits_sr_linked <- function(output, b_col, r_col, cov_col,
   # Data to plot
   data_plot <- output$data %>%
     # Rename columns
-    rename("b_scaled"=b_col, "r_scaled"=r_col, "cov_scaled"=cov_col)
+    rename("b_scaled"=b_col, "sp_scaled"=sp_col, "cov_scaled"=cov_col)
 
   # Build lines
   #############################
 
+  # Extract results
+  results_orig <- splink::get_results(output)
+  if(length(results_orig)==2){
+    results <- results_orig$stock
+  }else{
+    results <- results_orig
+  }
+
   # Params
-  results <- splink::get_results(output)
-  srfits <- results %>%
+  spfits <- results %>%
     select(stockid, param, est) %>%
     spread(key="param", value="est")
-
-  # SR type
-  type <- output$type
 
   # Biomass values to evaluate
   b <- seq(0, 1, 0.01)
@@ -38,30 +42,26 @@ plot_fits_sr_linked <- function(output, b_col, r_col, cov_col,
   cov_vals <- seq(-1, 1, 0.5)
 
   # Create lines
-  sr_lines <- purrr::map_df(1:nrow(srfits), function(x){
+  sp_lines <- purrr::map_df(1:nrow(spfits), function(x){
 
     # Parameters
-    stockid <- srfits$stockid[x]
-    alpha <- srfits$alpha[x]
-    beta <- srfits$beta[x]
-    theta <- srfits$theta[x]
+    stockid <- spfits$stockid[x]
+    r <- spfits$r[x]
+    k <- spfits$B0[x]
+    theta <- spfits$theta[x]
+    p <- output$p
 
     # Loop through covariate values
-    sr_lines1 <- purrr::map_df(cov_vals, function(x){
+    sp_lines1 <- purrr::map_df(cov_vals, function(x){
 
       # Simulate data
-      if(type=="ricker"){
-        recruits <- alpha * b * exp(-beta*b) * exp(theta*x)
-      }
-      if(type=="bev-holt"){
-        recruits <- alpha * b / (beta + b) * exp(theta*x)
-      }
+      sp <- r/p * b * (1-(b/k)^p) * exp(theta*x)
 
       # Record production
       z <- data.frame(stockid=stockid,
                       cov_scaled=x,
                       b_scaled=b,
-                      r_scaled=recruits)
+                      sp_scaled=sp)
 
     })
 
@@ -82,12 +82,12 @@ plot_fits_sr_linked <- function(output, b_col, r_col, cov_col,
                      axis.line = element_line(colour = "black"))
 
   # Plot data
-  g <- ggplot(data_plot, aes(x=b_scaled, y=r_scaled, fill=cov_scaled)) +
+  g <- ggplot(data_plot, aes(x=b_scaled, y=sp_scaled, fill=cov_scaled)) +
     geom_point(pch=21, size=2, color="grey30") +
     # Line
-    geom_line(data=sr_lines, mapping=aes(x=b_scaled, y=r_scaled, color=cov_scaled, group=cov_scaled), size=0.7, inherit.aes = F) +
+    geom_line(data=sp_lines, mapping=aes(x=b_scaled, y=sp_scaled, color=cov_scaled, group=cov_scaled), size=0.7, inherit.aes = F) +
     # Labels
-    labs(x="Abundance (scaled)", y='Recruitment (scaled)') +
+    labs(x="Abundance (scaled)", y='Surplus production (scaled)') +
     # Horizontal guide
     geom_hline(yintercept=0, linetype="dotted", color="black") +
     # Legend

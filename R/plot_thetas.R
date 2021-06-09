@@ -9,17 +9,40 @@
 plot_thetas <- function(results){
 
   # Format data
-  data <- results %>%
-    # Reduce
-    filter(param=="theta") %>%
-    # Reduce
-    select(stockid, est, est_lo, est_hi) %>%
-    # Order
-    arrange(desc(est)) %>%
-    mutate(stockid=factor(stockid, levels=stockid)) %>%
-    # Add sig
-    mutate(est_inf=ifelse(est_hi<0, "negative",
-                          ifelse(est_lo>0, "positive", "none")))
+  ####################################
+
+  # Type
+  type <- ifelse(length(results)==2, "random", "fixed")
+
+  # Format data
+  if(type=="fixed"){
+    data <- results %>%
+      # Reduce
+      filter(param=="theta") %>%
+      # Reduce
+      select(stockid, est, est_lo, est_hi) %>%
+      # Order
+      arrange(desc(est)) %>%
+      mutate(stockid=factor(stockid, levels=stockid)) %>%
+      # Add sig
+      mutate(est_inf=ifelse(est_hi<0, "negative",
+                            ifelse(est_lo>0, "positive", "none")))
+  }else{
+    data <- results$stock %>%
+      # Reduce
+      filter(param=="theta") %>%
+      # Reduce
+      select(stockid, est, est_lo, est_hi) %>%
+      # Order
+      arrange(desc(est)) %>%
+      mutate(stockid=factor(stockid, levels=stockid)) %>%
+      # Add sig
+      mutate(est_inf=ifelse(est_hi<0, "negative",
+                            ifelse(est_lo>0, "positive", "none")))
+  }
+
+  # Plot data
+  ###############################################
 
   # Spline bars
   g <- ggplot() +
