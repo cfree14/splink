@@ -75,7 +75,7 @@ fit_sp_base <- function(data, b_col, sp_col, p=1){
   #######################################
 
   # Package data
-  output <- list(data=data, fit=fit, sd=sd)
+  output <- list(data=data, fit=fit, sd=sd, p=p, cov_effect="none")
 
   # Return
   setwd(origdir)
