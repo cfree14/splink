@@ -1,4 +1,4 @@
-splink: Covariate-linked biomass dynamic models
+splink: Covariate-linked population dynamics models
 ======================================================================
 
 Installation
@@ -32,4 +32,4 @@ The package implements functions to:
 Citation
 ---------
 
-Free CM (2021) splink: Covariate-linked biomass dynamic models.
+Free CM (2021) splink: Covariate-linked population dynamics models.
