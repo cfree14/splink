@@ -8,16 +8,15 @@
 #' @return A list containing: (1) the data; (2) the model fit; and (3) the standard error report.
 #' @examples
 #' data <- splink::ram_wc
-#' output <- splink::fit_sr_linked(data=data, b_col="b_scaled", r_col="r_scaled", cov_col="sst_c_scaled", effect="random", type="ricker")
+#' output <- splink::fit_sr_linked_random(data=data, b_col="b_scaled", r_col="r_scaled", cov_col="sst_c_scaled", type="ricker")
 #' results <- splink::get_results(output)
 #' splink::plot_results(results)
 #' splink::plot_fits_sr(output, plotdir="~/Desktop", plotname="test.pdf")
 #' @export
-fit_sr_linked_random <- function(data, b_col, r_col, cov_col, effect, type){
+fit_sr_linked_random <- function(data, b_col, r_col, cov_col, type){
 
   # Perform checks
   if(!type %in% c("ricker", "bev-holt")){stop("The 'type' must be either 'ricker' or 'bev-holt'.")}
-  if(!effect %in% c("random", "fixed")){stop("The 'effect' must be either 'random' or 'fixed'.")}
 
   # Parameters
   stocks <- unique(data$stockid)
@@ -94,7 +93,7 @@ fit_sr_linked_random <- function(data, b_col, r_col, cov_col, effect, type){
   #######################################
 
   # Package data
-  output <- list(data=data, fit=fit, sd=sd, type=type, effect=effect)
+  output <- list(data=data, fit=fit, sd=sd, type=type, cov_effect="random")
 
   # Return
   setwd(origdir)

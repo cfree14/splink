@@ -4,12 +4,18 @@
 \alias{fit_sr}
 \title{Fit stock recruit model using maximum likelihood estimation}
 \usage{
-fit_sr(data, b_col, r_col, type)
+fit_sr(data, b_col, r_col, type, cov_col = NULL, cov_effect = NULL)
 }
 \arguments{
 \item{data}{A data frame}
 
-\item{type}{"ricker" or "bev-holt"}
+\item{b_col}{Name of the column with biomass}
+
+\item{r_col}{Name of the column with recruitment}
+
+\item{type}{Stock recruit type: "ricker" or "bev-holt"}
+
+\item{cov_col}{Name of the column with the covariate}
 }
 \value{
 A list containing: (1) the data; (2) the model fit; and (3) the standard error report.

@@ -4,12 +4,20 @@
 \alias{fit_sp}
 \title{Fit surplus production model using maximum likelihood estimation}
 \usage{
-fit_sp(data, b_col, sp_col, p = 1)
+fit_sp(data, b_col, sp_col, p = 1, cov_col = NULL, cov_effect = NULL)
 }
 \arguments{
-\item{data}{A prepped data frame with the following required columns: stockid, year, biomass_scaled, sp_scaled}
+\item{data}{Data}
 
-\item{p}{The shape parameter}
+\item{b_col}{Name of biomass column}
+
+\item{sp_col}{Name of surplus production column}
+
+\item{p}{Shape parameter}
+
+\item{cov_col}{Name of covariate column}
+
+\item{cov_effect}{Type of covariate effect: "fixed" or "random"}
 }
 \value{
 A list containing: (1) the data; (2) the model fit; and (3) the standard error report.

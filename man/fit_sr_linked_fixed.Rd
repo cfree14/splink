@@ -22,5 +22,6 @@ data <- splink::ram_wc
 output <- splink::fit_sr_linked_fixed(data=data, b_col="b_scaled", r_col="r_scaled", cov_col="sst_c_scaled", type="ricker")
 results <- splink::get_results(output)
 splink::plot_results(results)
-splink::plot_fits_sr(output, plotdir="~/Desktop", plotname="test.pdf")
+splink::plot_thetas(results)
+splink::plot_fits_sr_linked(output, plotdir="~/Desktop", plotname="test.pdf")
 }

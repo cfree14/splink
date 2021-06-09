@@ -11,7 +11,8 @@
 #' output <- splink::fit_sr_linked_fixed(data=data, b_col="b_scaled", r_col="r_scaled", cov_col="sst_c_scaled", type="ricker")
 #' results <- splink::get_results(output)
 #' splink::plot_results(results)
-#' splink::plot_fits_sr(output, plotdir="~/Desktop", plotname="test.pdf")
+#' splink::plot_thetas(results)
+#' splink::plot_fits_sr_linked(output, plotdir="~/Desktop", plotname="test.pdf")
 #' @export
 fit_sr_linked_fixed <- function(data, b_col, r_col, cov_col, type){
 
@@ -89,7 +90,7 @@ fit_sr_linked_fixed <- function(data, b_col, r_col, cov_col, type){
   #######################################
 
   # Package data
-  output <- list(data=data, fit=fit, sd=sd, type=type, effect="fixed")
+  output <- list(data=data, fit=fit, sd=sd, type=type, cov_effect="fixed")
 
   # Return
   setwd(origdir)

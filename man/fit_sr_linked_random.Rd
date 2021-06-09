@@ -4,7 +4,7 @@
 \alias{fit_sr_linked_random}
 \title{Fit stock recruit model using maximum likelihood estimation}
 \usage{
-fit_sr_linked_random(data, b_col, r_col, cov_col, effect, type)
+fit_sr_linked_random(data, b_col, r_col, cov_col, type)
 }
 \arguments{
 \item{data}{A data frame}
@@ -19,7 +19,7 @@ This function fits a Ricker or Beverton-Holt stock recruitment model using maxim
 }
 \examples{
 data <- splink::ram_wc
-output <- splink::fit_sr_linked(data=data, b_col="b_scaled", r_col="r_scaled", cov_col="sst_c_scaled", effect="random", type="ricker")
+output <- splink::fit_sr_linked_random(data=data, b_col="b_scaled", r_col="r_scaled", cov_col="sst_c_scaled", type="ricker")
 results <- splink::get_results(output)
 splink::plot_results(results)
 splink::plot_fits_sr(output, plotdir="~/Desktop", plotname="test.pdf")
