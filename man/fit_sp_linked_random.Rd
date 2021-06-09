@@ -25,7 +25,7 @@ This function fits a surplus production model using maximum likelihood estimatio
 }
 \examples{
 data <- splink::ram_ne
-output <- splink::fit_sp_linked_random(data=data, b_col="tb_scaled", sp_col="sp_scaled", p=0.2, cov_col="sst_c_scaled")
+output <- splink::fit_sp_linked_random(data=data, b_col="tb_scaled", sp_col="sp_scaled", p=1, cov_col="sst_c_scaled")
 results <- splink::get_results(output)
 splink::plot_results(results)
 splink::plot_thetas(results)

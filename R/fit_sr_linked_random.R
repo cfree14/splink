@@ -79,7 +79,7 @@ fit_sr_linked_random <- function(data, b_col, r_col, cov_col, type){
   # dyn.load(TMB::dynlib(file.path(tmbdir, "srmodel_linked_random")))
 
   # Initialize model
-  model <- TMB::MakeADFun(data=input.data, parameters=params, DLL="srmodel_linked_random")
+  model <- TMB::MakeADFun(data=input.data, parameters=params, random="theta", DLL="srmodel_linked_random")
 
   # Fit model
   fit <- TMBhelper::fit_tmb(obj=model, lower=-Inf, upper=Inf, loopnum=3, newtonsteps=3, bias.correct=FALSE, getsd=FALSE)

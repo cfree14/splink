@@ -11,7 +11,7 @@
 #' @return A list containing: (1) the data; (2) the model fit; and (3) the standard error report.
 #' @examples
 #' data <- splink::ram_ne
-#' output <- splink::fit_sp_linked_random(data=data, b_col="tb_scaled", sp_col="sp_scaled", p=0.2, cov_col="sst_c_scaled")
+#' output <- splink::fit_sp_linked_random(data=data, b_col="tb_scaled", sp_col="sp_scaled", p=1, cov_col="sst_c_scaled")
 #' results <- splink::get_results(output)
 #' splink::plot_results(results)
 #' splink::plot_thetas(results)
@@ -29,7 +29,7 @@ fit_sp_linked_random <- function(data, b_col, sp_col, p=1, cov_col){
                  theta=rep(0.0, nstocks),
                  ln_sigmaP=rep(-2.5, nstocks),
                  mu_T=0.0,
-                 ln_sd_T=log(0.2)) # -3 before, -1.25 based on model fits
+                 ln_sd_T=-1.25) # -3 before, -1.25 based on model fits
 
   # Input data
   input.data <- list(Nstocks=nstocks,
@@ -69,14 +69,14 @@ fit_sp_linked_random <- function(data, b_col, sp_col, p=1, cov_col){
   # dyn.load(TMB::dynlib(file.path(tmbdir, "pella")))
 
   # Initialize model
-  model <- TMB::MakeADFun(data=input.data, parameters=params, DLL="pella_linked_random")
+  model <- TMB::MakeADFun(data=input.data, parameters=params, random="theta", DLL="pella_linked_random")
 
   # Fit model
   fit <- TMBhelper::fit_tmb(obj=model, lower=-Inf, upper=Inf, loopnum=3, newtonsteps=3, bias.correct=FALSE, getsd=FALSE)
 
   # Calculate SD
   hess <- optimHess(par=fit$par, fn=model$fn, gr=model$gr)
-  sd <- try(TMB::sdreport(model, hessian.random=hess))
+  sd <- try(TMB::sdreport(model, hessian.fixed=hess))
 
 
   # Export fit
