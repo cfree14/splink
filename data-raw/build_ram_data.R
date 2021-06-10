@@ -66,6 +66,16 @@ usethis::use_data(ram_ne, overwrite = T)
 usethis::use_data(ram_wc, overwrite = T)
 
 
+# Example model fit
+################################################################################
+
+splink_model <- readRDS("/Users/cfree/Dropbox/Chris/UCSB/projects/wc_cc_synthesis/analyses/productivity/output/production_0.01p_sst_fixed.Rds")
+
+# Model predicti
+cov_data <-
+
+
+usethis::use_data(splink_model, overwrite = T)
 
 
 

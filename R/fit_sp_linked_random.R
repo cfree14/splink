@@ -76,7 +76,7 @@ fit_sp_linked_random <- function(data, b_col, sp_col, p=1, cov_col){
 
   # Calculate SD
   hess <- optimHess(par=fit$par, fn=model$fn, gr=model$gr)
-  sd <- try(TMB::sdreport(model, hessian.fixed=hess))
+  sd <- try(TMB::sdreport(model, hessian.fixed=hess, getJointPrecision=TRUE))
 
 
   # Export fit
