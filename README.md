@@ -21,15 +21,17 @@ Functions
 
 The package implements functions to:
 
-- Prepare data for fitting biomass dynamics models: `?prep_data`
-- Quickly visualizing prepped data: `?plot_raw`
-- Fitting biomass dynamics modeling using NLS: `?fit_sp_nls`
-- Fitting biomass dynamics modeling using maximum likelihood using TMB: `?fit_sp`
-- Extracting parameter estimates from TMB model fits: `?get_results`
-- Quickly plotting parameter estimates from TMB model fits: `?plot_results`
+- Fit covariate-linked stock recruit models: `?fit_sr`
+- Fit covariate-linked surplus production models: `?fit_sr`
+- Extract parameter estimates and confidence intervals from model fits: `?get_results`
+- Plot parameter estimates and confidence intervals: `?plot_results`
+- Plot covariate influence estimates and confidence intervals: `?plot_thetas`
+- Plot model fits on top of data: `?plot_fits`
+
+The fitting functions allow covariate estimates to be estimated as either fixed or random effects. The production model can be fit using a user-specified shape parameter and the stock recruit model can be fit using either a Ricker or Beverton-Holt stock recruit relationship.
 
 
 Citation
 ---------
 
-Free CM (2021) splink: Covariate-linked population dynamics models.
+Free CM (2021) splink: Covariate-linked population dynamics models. Available at: https://github.com/cfree14/splink/
