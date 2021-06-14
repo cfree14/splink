@@ -6,12 +6,15 @@
 calc_msy <- function(output, cov_df){
 
   # For testsing
-  # cov_df <- output$data
+  # output <- splink::splink_model; cov_df <- output$data
 
-  # Improve handling of scaled K. Improve handling of input data. Add grouping? Global?
+  # Add cov_col for covariate dataframe. Add grouping?
 
   # Model type
   model_type <- output$cov_effect
+
+  # Parameters
+  ntrajs <- 1000
 
   # If fixed....
   if(model_type=="fixed"){
@@ -88,16 +91,22 @@ calc_msy <- function(output, cov_df){
     # Stock
     stock <- x
 
-    # Data to predict to
-    sdata <- cov_df %>%
+    # Extract data
+    sdata <- output$data %>%
       filter(stockid==stock)
-    cov_vals <- sdata$sst_c_scaled
+
+    # Prep covariate values
+    covdata <- cov_df %>%
+      filter(stockid==stock)
+    cov_vals <- covdata$sst_c_scaled
 
     #  Extract parameters
     p <- output$p
     div <- (p+1)^((p+1)/p)
     r <- stocks$r[stocks$stockid==stock]
-    K <- stocks$B0[stocks$stockid==stock]
+    K_scaled <- stocks$B0[stocks$stockid==stock]
+    B_max <- max(sdata$b)
+    K <- K_scaled * B_max
 
     # Extrac thetas
     thetas <- theta_sim[,stock]
@@ -108,13 +117,13 @@ calc_msy <- function(output, cov_df){
     # Format MSYS
     msy_df <- msys %>%
       as.data.frame() %>%
-      mutate(stockid=stock, year=sdata$year) %>%
+      mutate(stockid=stock, year=covdata$year) %>%
       select(stockid, year, everything()) %>%
       gather(key="id", value="msy", 3:ncol(.))
 
   })
 
-  # Calculate total MSY
+  # Calculate MSY stock-level
   msy_stock <- data_all %>%
     group_by(stockid, year) %>%
     summarize(msy_md=median(msy),
@@ -122,13 +131,42 @@ calc_msy <- function(output, cov_df){
               msy_hi=quantile(msy, probs=(0.975))) %>%
     ungroup()
 
+  # Calculate MSY global
+  msy_global <- data_all %>%
+    # Calculate sums
+    group_by(year, id) %>%
+    summarise(msy=sum(msy)) %>%
+    ungroup() %>%
+    # Calculate median and confidence intervals
+    group_by(year) %>%
+    summarize(msy_md=median(msy),
+              msy_lo=quantile(msy, probs=(0.025)),
+              msy_hi=quantile(msy, probs=(0.975))) %>%
+    ungroup()
+
   # Plot MSY stock
-  g <- ggplot(msy_stock, aes(x=year, y=msy_md)) +
-    facet_wrap(~stockid, ncol=5, scales="free_y") +
+  if(F){
+    g_stock <- ggplot(msy_stock, aes(x=year, y=msy_md)) +
+      facet_wrap(~stockid, ncol=5, scales="free_y") +
+      geom_ribbon(mapping=aes(x=year, ymin=msy_lo, ymax=msy_hi), fill="grey80") +
+      geom_line() +
+      # Labels
+      labs(x="Year", y="MSY") +
+      # Theme
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.background = element_blank(),
+            axis.line = element_line(colour = "black"))
+    print(g_stock)
+  }
+
+  # Plot global
+  g <- ggplot(msy_global, aes(x=year, y=msy_md/1e6)) +
     geom_ribbon(mapping=aes(x=year, ymin=msy_lo, ymax=msy_hi), fill="grey80") +
     geom_line() +
     # Labels
-    labs(x="Year", y="MSY (scaled)") +
+    labs(x="Year", y="MSY (millions)") +
     # Theme
     theme_bw() +
     theme(panel.grid.major = element_blank(),
@@ -138,6 +176,7 @@ calc_msy <- function(output, cov_df){
   print(g)
 
   # Return
+  out <- list(msy_stock=msy_stock, msy_global=msy_global)
   return(msy_stock)
 
 
