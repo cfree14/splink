@@ -165,7 +165,7 @@ calc_msy <- function(output, cov_df){
 
   # Plot global
   g <- ggplot(msy_global, aes(x=year, y=msy_md/1e6)) +
-    geom_ribbon(mapping=aes(x=year, ymin=msy_lo, ymax=msy_hi), fill="grey80") +
+    geom_ribbon(mapping=aes(x=year, ymin=msy_lo/1e6, ymax=msy_hi/1e6), fill="grey80") +
     geom_line() +
     # Labels
     labs(x="Year", y="MSY (millions)") +
@@ -179,7 +179,7 @@ calc_msy <- function(output, cov_df){
 
   # Return
   out <- list(msy_stock=msy_stock, msy_global=msy_global)
-  return(msy_stock)
+  return(out)
 
 
 }
