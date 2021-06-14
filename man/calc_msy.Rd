@@ -6,6 +6,11 @@
 \usage{
 calc_msy(output, cov_df)
 }
+\arguments{
+\item{output}{Output of model fit}
+
+\item{cov_df}{Data frame containing: stockid, year, cov_col}
+}
 \description{
 This function calculates MSY.
 }

@@ -2,7 +2,9 @@
 #' Calculate covariate-linked MSY over time
 #'
 #' This function calculates MSY.
-#'
+#' @param output Output of model fit
+#' @param cov_df Data frame containing: stockid, year, cov_col
+#' @export
 calc_msy <- function(output, cov_df){
 
   # For testsing
