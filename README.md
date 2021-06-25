@@ -22,7 +22,7 @@ Functions
 The package implements functions to:
 
 - Fit covariate-linked stock recruit models: `?fit_sr`
-- Fit covariate-linked surplus production models: `?fit_sr`
+- Fit covariate-linked surplus production models: `?fit_sp`
 - Extract parameter estimates and confidence intervals from model fits: `?get_results`
 - Plot parameter estimates and confidence intervals: `?plot_results`
 - Plot covariate influence estimates and confidence intervals: `?plot_thetas`
