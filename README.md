@@ -27,7 +27,7 @@ The package implements functions to:
 - Plot parameter estimates and confidence intervals: `?plot_results`
 - Plot covariate influence estimates and confidence intervals: `?plot_thetas`
 - Plot model fits on top of data: `?plot_fits`
-- Hindcast covariate-linked maximum sustainable yield (MSY): `?calc_msy`
+- Predict covariate-linked maximum sustainable yield (MSY): `?calc_msy`
 
 The fitting functions allow covariate estimates to be estimated as either fixed or random effects. The production model can be fit using a user-specified shape parameter and the stock recruit model can be fit using either a Ricker or Beverton-Holt stock recruit relationship.
 
