@@ -1,22 +1,24 @@
 
 #' Calculate covariate-linked MSY over time
 #'
-#' This function calculates MSY.
+#' This function calculates covariate-linked MSY based on (1) model estimates of the impact of the covariate on MSY and (2) a dataframe providing the covariate data overwhich to predict MSY.
+#'
 #' @param output Output of model fit
-#' @param cov_df Data frame containing: stockid, year, cov_col
+#' @param cov_df Data frame containing: stockid, year, cov_col (which must already be scaled correctly)
+#' @param ntrajs Number of trajectories to bootstrap (defaut=1000)
 #' @export
-calc_msy <- function(output, cov_df){
+calc_msy <- function(output, cov_df, ntrajs=1000){
 
   # For testsing
-  # output <- splink::splink_model; cov_df <- output$data
+  # output <- splink::splink_model
+  # cov_df <- output$data %>%
+  #   select(stockid, year, sst_c_scaled) %>%
+  #   rename(cov_col=sst_c_scaled)
 
   # Add cov_col for covariate dataframe. Add grouping?
 
   # Model type
   model_type <- output$cov_effect
-
-  # Parameters
-  ntrajs <- 1000
 
   # If fixed....
   if(model_type=="fixed"){
@@ -100,7 +102,7 @@ calc_msy <- function(output, cov_df){
     # Prep covariate values
     covdata <- cov_df %>%
       filter(stockid==stock)
-    cov_vals <- covdata$sst_c_scaled
+    cov_vals <- covdata$cov_col
 
     #  Extract parameters
     p <- output$p

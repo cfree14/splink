@@ -4,13 +4,15 @@
 \alias{calc_msy}
 \title{Calculate covariate-linked MSY over time}
 \usage{
-calc_msy(output, cov_df)
+calc_msy(output, cov_df, ntrajs = 1000)
 }
 \arguments{
 \item{output}{Output of model fit}
 
-\item{cov_df}{Data frame containing: stockid, year, cov_col}
+\item{cov_df}{Data frame containing: stockid, year, cov_col (which must already be scaled correctly)}
+
+\item{ntrajs}{Number of trajectories to bootstrap (defaut=1000)}
 }
 \description{
-This function calculates MSY.
+This function calculates covariate-linked MSY based on (1) model estimates of the impact of the covariate on MSY and (2) a dataframe providing the covariate data overwhich to predict MSY.
 }

@@ -1,23 +1,12 @@
 
-#' Plot covariate-linked surplus production model fits
+#' Build surplus production curves
 #'
-#' This function plots covariate-linked surplus production model fits and exports to a PDF.
+#' This function builds surplus production curves.
 #'
 #' @param output SP model output
-#' @param plotdir Path for plot export
-#' @param plotname Plot name (must end with ".pdf)
-#' @return PDF with production model fits
+#' @return A dataframe with SP curves.
 #' @export
-plot_fits_sp_linked <- function(output, b_col, sp_col, cov_col,
-                                plotdir=getwd(), plotname="TMB_fits.pdf"){
-
-  # Stocks do
-  stocks_do <- sort(unique(output$data$stockid))
-
-  # Data to plot
-  data_plot <- output$data %>%
-    # Rename columns
-    rename("b_scaled"=b_col, "sp_scaled"=sp_col, "cov_scaled"=cov_col)
+plot_fits_sp_linked <- function(output){
 
   # Build lines
   #############################
